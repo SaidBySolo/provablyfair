@@ -1,20 +1,17 @@
-from typing import Tuple
 from secrets import token_hex
 from hashlib import sha256
 from hmac import new
 
 
-def generate_server_seed() -> Tuple[str, str]:
+def generate_server_seed() -> str:
     server_seed = token_hex(20)
-    server_seed_hash_object = sha256(server_seed.encode())
-    server_seed_hash = server_seed_hash_object.hexdigest()
-    return server_seed, server_seed_hash
+    return server_seed
 
 
 def hash_server_seed(server_seed: str):
     server_seed_hash_object = sha256(server_seed.encode())
     server_seed_hash = server_seed_hash_object.hexdigest()
-    return server_seed, server_seed_hash
+    return server_seed_hash
 
 
 def roll(server_seed: str, client_seed: str, nonce: int = 0):
