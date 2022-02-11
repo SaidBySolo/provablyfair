@@ -2,7 +2,7 @@ from dataclasses import asdict, dataclass
 from hashlib import sha256, sha512
 from hmac import new
 from secrets import token_hex
-from typing import Any, Optional, TypedDict
+from typing import Any, Dict, Optional, TypedDict
 
 
 class RolledDataDict(TypedDict):
@@ -19,7 +19,7 @@ class RolledData:
     server_seed_hash: str
     client_seed: str
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
     @classmethod
