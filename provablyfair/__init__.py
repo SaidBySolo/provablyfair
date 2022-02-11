@@ -1,8 +1,8 @@
-from secrets import token_hex
-from hashlib import sha256
-from hmac import new
-from typing import Any, Optional, TypedDict
 from dataclasses import asdict, dataclass
+from hashlib import sha256, sha512
+from hmac import new
+from secrets import token_hex
+from typing import Any, Optional, TypedDict
 
 
 class RolledDataDict(TypedDict):
@@ -29,7 +29,7 @@ class RolledData:
 
 def verify_roll(server_seed: str, rolled_data: RolledData):
     instance = ProvablyFair(server_seed)
-    return instance.roll(rolled_data.client_seed, rolled_data.roll) == rolled_data
+    return instance.roll(rolled_data.client_seed, rolled_data.nonce) == rolled_data
 
 
 class ProvablyFair:
@@ -38,7 +38,7 @@ class ProvablyFair:
         self.server_seed_hash = self.hash_server_seed(self.server_seed)
 
     def generate_server_seed(self) -> str:
-        server_seed = token_hex(20)
+        server_seed = token_hex(32)
         return server_seed
 
     def hash_server_seed(self, server_seed: str):
@@ -50,7 +50,7 @@ class ProvablyFair:
         hmac_object = new(
             self.server_seed.encode(),
             f"{client_seed}-{nonce}".encode(),
-            sha256,
+            sha512,
         )
         hmac_hash = hmac_object.hexdigest()
 
@@ -59,7 +59,7 @@ class ProvablyFair:
         while True:
             roll_number_str = hmac_hash[count : count + 5]
             roll_number = int(roll_number_str, 16)
-            if roll_number > 999_999:
+            if roll_number > 999999:
                 count += 5
             else:
                 break
