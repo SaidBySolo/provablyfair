@@ -1,8 +1,8 @@
 import setuptools
 
 setuptools.setup(
-    name="neispy",
-    version="4.0.1",
+    name="provablyfair",
+    version="1.0.0",
     license="MIT",
     author="Ryu ju heon",
     author_email="saidbysolo@gmail.com",
